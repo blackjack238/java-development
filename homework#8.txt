@@ -1,0 +1,37 @@
+public class Main {
+    public static void main(String[] args) {
+new Circle().getnameshape();
+new Square().getnameshape();
+new Parallelogram().getnameshape();
+new    Kite().getnameshape();
+new   Rhombus().getnameshape();
+    }
+}
+interface name{
+  default void Getname(String g) {
+   String gg=g.replaceAll("class ","");
+      System.out.println(gg);
+  }
+}
+ class shape implements name{
+
+
+    protected void getnameshape(){
+        Getname(String.valueOf(getClass()));
+
+    }
+
+
+
+}
+class Circle extends shape{
+
+} class Square extends shape{
+
+}class Parallelogram extends shape{
+
+}class Rhombus extends shape{
+
+}class Kite extends shape{
+
+}

@@ -1,2 +1,2 @@
-public class Kite extends shape{
+public class Kite extends Shape {
 }

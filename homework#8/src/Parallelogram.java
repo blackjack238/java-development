@@ -1,2 +1,2 @@
-public class Parallelogram extends  shape{
+public class Parallelogram extends Shape {
 }

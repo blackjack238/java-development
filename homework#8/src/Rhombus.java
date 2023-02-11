@@ -1,3 +1,3 @@
-public class Rhombus extends  shape{
+public class Rhombus extends Shape {
 
 }

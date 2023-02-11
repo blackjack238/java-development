@@ -1,8 +1,8 @@
 
-    class shape {
+    class Shape {
 
 
-        protected void getnameshape(){
+        protected void printShape(){
           new ShapeName().printShapeName(String.valueOf(getClass()));
 
         }

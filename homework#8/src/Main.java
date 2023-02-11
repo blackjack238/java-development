@@ -1,11 +1,12 @@
 public class Main {
     public static void main(String[] args) {
-new Shape().printShape(new Circle());
-        new Shape().printShape(new Parallelogram());
-        new Shape().printShape(new Square());
-        new Shape().printShape(new Kite());
-        new Shape().printShape(new Rhombus());
+new Square().printShape();
+new Rhombus().printShape();
+new Parallelogram().printShape();
+new Kite().printShape();
+new Circle().printShape();
     }
+
 }
 
 

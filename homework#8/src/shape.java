@@ -1,9 +1,9 @@
 
-    class shape implements name{
+    class shape {
 
 
         protected void getnameshape(){
-            Getname(String.valueOf(getClass()));
+          new ShapeName().printShapeName(String.valueOf(getClass()));
 
         }
 }

@@ -1,12 +1,17 @@
 
     class Shape {
 
+private Shape shape;
+
+        public Shape getShape() {
+            shape=new Shape();
+            return shape;
+        }
+
+        protected void printShape(){
 
 
-        protected void printShape(Shape shape){
-String e= String.valueOf(shape.getClass());
-
-            new ShapeName().printShapeName(e);
+            new ShapeName().printShapeName(getShape());
 
         }
 }

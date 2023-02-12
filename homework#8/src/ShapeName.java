@@ -1,9 +1,9 @@
  class ShapeName {
 
 
-     public void printShapeName(String e) {
-String name=e.replaceAll("class ","");
-
-        System.out.println(name);
+     public void printShapeName(Shape shape) {
+String name= String.valueOf(shape.getClass());
+String name2=name.replaceAll("class ","");
+        System.out.println(name2);
     }
 }

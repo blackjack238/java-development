@@ -32,7 +32,7 @@ public class MyQueue <E>{
         for (int to = count, i = count = 0; i < to; i++)
             es[i] = Integer.parseInt(null);
     }
-    public int poll()
+    public E poll()
     {
 
         if (isEmpty())
@@ -41,7 +41,7 @@ public class MyQueue <E>{
             System.exit(-1);
         }
 
-        int x = (int) array[front];
+        E x = (E) array[front];
 
         System.out.println("Removing " + x);
 

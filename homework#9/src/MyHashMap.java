@@ -1,28 +1,31 @@
 public class MyHashMap <K,V>{
-    private static final int INITIAL_CAPACITY = 16;
-    private static final float LOAD_FACTOR = 0.75f;
-    private int size = 0;
-
-    private Node<K, V>[] table;
+    private final int INITIAL_CAPACITY = 16;
+    private Node<K, V>[] buckets;
+    private int size;
 
     private static class Node<K, V> {
-        final K key;
-        V value;
-        Node<K, V> next;
+        private final K key;
+        private V value;
+        private Node<K, V> next;
 
-        Node(K key, V value) {
+        public Node(K key, V value) {
             this.key = key;
             this.value = value;
+            next = null;
         }
     }
 
     public MyHashMap() {
-        table = (Node<K, V>[]) new Node[INITIAL_CAPACITY];
+        buckets = new Node[INITIAL_CAPACITY];
+        size = 0;
     }
 
     public void put(K key, V value) {
-        int index = getIndex(key);
-        Node<K, V> currentNode = table[index];
+        int bucketIndex = getBucketIndex(key);
+        Node<K, V> head = buckets[bucketIndex];
+
+
+        Node<K, V> currentNode = head;
         while (currentNode != null) {
             if (currentNode.key.equals(key)) {
                 currentNode.value = value;
@@ -30,18 +33,17 @@ public class MyHashMap <K,V>{
             }
             currentNode = currentNode.next;
         }
+
+
         Node<K, V> newNode = new Node<>(key, value);
-        newNode.next = table[index];
-        table[index] = newNode;
+        newNode.next = head;
+        buckets[bucketIndex] = newNode;
         size++;
-        if (size > table.length * LOAD_FACTOR) {
-            resize();
-        }
     }
 
     public V get(K key) {
-        int index = getIndex(key);
-        Node<K, V> currentNode = table[index];
+        int bucketIndex = getBucketIndex(key);
+        Node<K, V> currentNode = buckets[bucketIndex];
         while (currentNode != null) {
             if (currentNode.key.equals(key)) {
                 return currentNode.value;
@@ -52,16 +54,24 @@ public class MyHashMap <K,V>{
     }
 
     public void remove(K key) {
-        int index = getIndex(key);
-        Node<K, V> prevNode = null;
-        Node<K, V> currentNode = table[index];
+        int bucketIndex = getBucketIndex(key);
+        Node<K, V> head = buckets[bucketIndex];
+
+        if (head == null) {
+            return;
+        }
+
+        if (head.key.equals(key)) {
+            buckets[bucketIndex] = head.next;
+            size--;
+            return;
+        }
+
+        Node<K, V> prevNode = head;
+        Node<K, V> currentNode = head.next;
         while (currentNode != null) {
             if (currentNode.key.equals(key)) {
-                if (prevNode == null) {
-                    table[index] = currentNode.next;
-                } else {
-                    prevNode.next = currentNode.next;
-                }
+                prevNode.next = currentNode.next;
                 size--;
                 return;
             }
@@ -78,24 +88,15 @@ public class MyHashMap <K,V>{
         return size == 0;
     }
 
-    private int getIndex(K key) {
-        return Math.abs(key.hashCode() % table.length);
+    public void clear() {
+        for (int i = 0; i < buckets.length; i++) {
+            buckets[i] = null;
+        }
+        size = 0;
     }
 
-    private void resize() {
-        int newCapacity = table.length * 2;
-        Node<K, V>[] newTable = (Node<K, V>[]) new Node[newCapacity];
-        for (int i = 0; i < table.length; i++) {
-            Node<K, V> currentNode = table[i];
-            while (currentNode != null) {
-                int newIndex = Math.abs(currentNode.key.hashCode() % newCapacity);
-                Node<K, V> newNode = new Node<>(currentNode.key, currentNode.value);
-                newNode.next = newTable[newIndex];
-                newTable[newIndex] = newNode;
-                currentNode = currentNode.next;
-            }
-        }
-        table = newTable;
+    private int getBucketIndex(K key) {
+        return Math.abs(key.hashCode() % buckets.length);
     }
 }
 

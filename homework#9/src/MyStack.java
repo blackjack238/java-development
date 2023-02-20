@@ -1,7 +1,7 @@
 public class MyStack <E>{
     private final int CUT_RATE = 4;
     private Object arr[];
-    private int  top = -1;
+    private int  top = 0;
     private int capacity=10;
     private int count=0;
 
@@ -20,7 +20,7 @@ public class MyStack <E>{
     }
 
 
-    public Object pop()
+    public E pop()
     {
 
         if (isEmpty())
@@ -32,29 +32,29 @@ public class MyStack <E>{
         System.out.println("Removing " + peek());
 
 
-        return  arr[top--];
+        return (E) arr[top--];
     }
 
-    public Object peek()
+    public E peek()
     {
         if (!isEmpty()) {
-            return  arr[top];
+            return (E) arr[top];
         }
         else {
             System.exit(-1);
         }
 
-        return -1;
+        return null;
     }
 
 
     public int size() {
-        return top + 1;
+        return top;
     }
 
 
     public boolean isEmpty() {
-        return top == -1;
+        return top == 0;
     }
 
 

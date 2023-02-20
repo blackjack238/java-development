@@ -71,8 +71,10 @@ public class MyStack <E>{
         final Object[] es =arr ;
         for (int to = count, i = count = 0; i < to; i++)
             es[i] = Integer.parseInt(null);
+        top=0;
     }
-    public void remove(int index) {
+    public void remove(int index) { top--;
+
         for (int i = index; i<count; i++)
             arr[i] = arr[i+1];
         arr[count] = null;

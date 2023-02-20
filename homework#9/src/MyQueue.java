@@ -30,7 +30,7 @@ public class MyQueue <E>{
 
         final Object[] es =array ;
         for (int to = count, i = count = 0; i < to; i++)
-            es[i] = Integer.parseInt(null);
+            es[i] =null;
     }
     public E poll()
     {

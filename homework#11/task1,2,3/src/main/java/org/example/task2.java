@@ -9,13 +9,13 @@ import java.util.stream.Stream;
 
 public class task2 {
     public static void main(String[] args) {
-        Stream<String> names =
-                Arrays.asList("John", "Bill", "Max", "Alex")
-                        .stream()
-                        .sorted();
+        List<String> strings = Arrays.asList("Apple", "banana", "Cherry", "Date", "elderberry");
 
-        List<String> filteredNames = names.collect(Collectors.toList());
-        Collections.reverse(filteredNames);
-        System.out.println(filteredNames);
+        List<String> result = strings.stream()
+                .map(String::toUpperCase)
+                .sorted((s1, s2) -> s2.compareTo(s1))
+                .collect(Collectors.toList());
+
+        System.out.println(result);
     }
 }

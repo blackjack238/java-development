@@ -1,5 +1,7 @@
 package org.example;
 
+
+
 import com.google.gson.Gson;
 
 import java.io.*;
@@ -7,11 +9,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 class JsonPlaceholderApiClient {
-    static Gson JsonConverter;
+    static Gson JsonConverter=new Gson();
 
     private static final String TODOS_ENDPOINT = "/todos";
 
@@ -148,9 +151,9 @@ class JsonPlaceholderApiClient {
             return JsonConverter.fromJson(responseBody, User[].class);
         }
     }
-    public static void writeCommentsToFile(int userId, int postId) throws IOException {
+    public static void writeCommentsToFile() throws IOException {
         // Get the post with the specified ID for the user
-        URL postUrl = new URL(BASE_URL + USERS_ENDPOINT + "/" + userId + POSTS_ENDPOINT + "?userId=" + userId + "&id=" + postId);
+        URL postUrl = new URL("https://jsonplaceholder.typicode.com/users/1/posts");
         HttpURLConnection postConn = (HttpURLConnection) postUrl.openConnection();
         postConn.setRequestMethod("GET");
         postConn.setRequestProperty("Accept", "application/json");
@@ -169,7 +172,7 @@ class JsonPlaceholderApiClient {
             }
 
             // Get the comments for the post
-            URL commentsUrl = new URL(BASE_URL + POSTS_ENDPOINT + "/" + postId + COMMENTS_ENDPOINT);
+            URL commentsUrl = new URL("https://jsonplaceholder.typicode.com/users/1/posts");
             HttpURLConnection commentsConn = (HttpURLConnection) commentsUrl.openConnection();
             commentsConn.setRequestMethod("GET");
             commentsConn.setRequestProperty("Accept", "application/json");
@@ -180,7 +183,7 @@ class JsonPlaceholderApiClient {
             }
 
             try (Scanner commentsScanner = new Scanner(commentsConn.getInputStream(), StandardCharsets.UTF_8.name());
-                 BufferedWriter writer = new BufferedWriter(new FileWriter("user-" + userId + "-post-" + postId + "-comments.json"))) {
+                 BufferedWriter writer = new BufferedWriter(new FileWriter("user-" + 1 + "-post-" + 10 + "-comments.json"))) {
                 String commentsResponseBody = commentsScanner.useDelimiter("\\A").next();
                 Comment[] comments = JsonConverter.fromJson(commentsResponseBody, Comment[].class);
 
@@ -192,8 +195,8 @@ class JsonPlaceholderApiClient {
             }
         }
     }
-    public static List<Todo> getOpenTodosForUser(int userId) throws IOException {
-        URL todosUrl = new URL(BASE_URL + "/users/" + userId + TODOS_ENDPOINT);
+    public static List<Todo> getOpenTodosForUser() throws IOException {
+        URL todosUrl = new URL("https://jsonplaceholder.typicode.com/users/1/todos");
         HttpURLConnection todosConn = (HttpURLConnection) todosUrl.openConnection();
         todosConn.setRequestMethod("GET");
         todosConn.setRequestProperty("Accept", "application/json");
@@ -210,13 +213,18 @@ class JsonPlaceholderApiClient {
             Todo[] allTodos = JsonConverter.fromJson(todosResponseBody, Todo[].class);
 
             for (Todo todo : allTodos) {
-                if (!todo.isCompleted() && todo.getUserId() == userId) {
+                if (!todo.isCompleted() && todo.getUserId() == 1) {
                     todos.add(todo);
                 }
             }
         }
 
         return todos;
+    }
+
+    public static void main(String[] args) throws IOException {
+
+        System.out.println(JsonConverter.toJson(getOpenTodosForUser()));
     }
 }
 

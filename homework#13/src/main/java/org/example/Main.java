@@ -151,9 +151,11 @@ class JsonPlaceholderApiClient {
             return JsonConverter.fromJson(responseBody, User[].class);
         }
     }
-    public static void writeCommentsToFile() throws IOException {
+    public static void writeCommentsToFile(int userID) throws IOException {
+        int postId;
+        Post lastPost = null;
         // Get the post with the specified ID for the user
-        URL postUrl = new URL("https://jsonplaceholder.typicode.com/users/1/posts");
+        URL postUrl = new URL("https://jsonplaceholder.typicode.com/users/"+userID+"/posts");
         HttpURLConnection postConn = (HttpURLConnection) postUrl.openConnection();
         postConn.setRequestMethod("GET");
         postConn.setRequestProperty("Accept", "application/json");
@@ -166,13 +168,18 @@ class JsonPlaceholderApiClient {
         try (Scanner postScanner = new Scanner(postConn.getInputStream(), StandardCharsets.UTF_8.name())) {
             String postResponseBody = postScanner.useDelimiter("\\A").next();
             Post[] posts = JsonConverter.fromJson(postResponseBody, Post[].class);
+            for (Post p: posts) {
 
+                if (lastPost == null || p.getId() > lastPost.getId()) {
+                    lastPost = p;
+                }
+            }
             if (posts.length == 0) {
                 throw new RuntimeException("Post not found");
             }
 
             // Get the comments for the post
-            URL commentsUrl = new URL("https://jsonplaceholder.typicode.com/users/1/posts");
+            URL commentsUrl = new URL("https://jsonplaceholder.typicode.com/posts/"+lastPost.getId()+"/comments");
             HttpURLConnection commentsConn = (HttpURLConnection) commentsUrl.openConnection();
             commentsConn.setRequestMethod("GET");
             commentsConn.setRequestProperty("Accept", "application/json");
@@ -183,20 +190,16 @@ class JsonPlaceholderApiClient {
             }
 
             try (Scanner commentsScanner = new Scanner(commentsConn.getInputStream(), StandardCharsets.UTF_8.name());
-                 BufferedWriter writer = new BufferedWriter(new FileWriter("user-" + 1 + "-post-" + 10 + "-comments.json"))) {
+                 BufferedWriter writer = new BufferedWriter(new FileWriter("user-" + userID + "-post-" + lastPost.getId() + "-comments.json"))) {
                 String commentsResponseBody = commentsScanner.useDelimiter("\\A").next();
                 Comment[] comments = JsonConverter.fromJson(commentsResponseBody, Comment[].class);
 
-                for (Comment comment : comments) {
-                    String json = JsonConverter.toJson(comment);
-                    writer.write(json);
-                    writer.newLine();
-                }
+               writer.write(JsonConverter.toJson(comments));
             }
         }
     }
-    public static List<Todo> getOpenTodosForUser() throws IOException {
-        URL todosUrl = new URL("https://jsonplaceholder.typicode.com/users/1/todos");
+    public static List<Todo> getOpenTodosForUser(int userId) throws IOException {
+        URL todosUrl = new URL("https://jsonplaceholder.typicode.com/users/"+userId+"/todos");
         HttpURLConnection todosConn = (HttpURLConnection) todosUrl.openConnection();
         todosConn.setRequestMethod("GET");
         todosConn.setRequestProperty("Accept", "application/json");
@@ -213,7 +216,7 @@ class JsonPlaceholderApiClient {
             Todo[] allTodos = JsonConverter.fromJson(todosResponseBody, Todo[].class);
 
             for (Todo todo : allTodos) {
-                if (!todo.isCompleted() && todo.getUserId() == 1) {
+                if (!todo.isCompleted() && todo.getUserId() == userId) {
                     todos.add(todo);
                 }
             }
@@ -223,8 +226,8 @@ class JsonPlaceholderApiClient {
     }
 
     public static void main(String[] args) throws IOException {
-
-        System.out.println(JsonConverter.toJson(getOpenTodosForUser()));
+writeCommentsToFile(1);
+        System.out.println(JsonConverter.toJson(getOpenTodosForUser(1)));
     }
 }
 
